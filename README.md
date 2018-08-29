@@ -1,20 +1,23 @@
-<p align='center'><img src='https://c1.staticflickr.com/5/4786/26869034328_9ff90bf2ac.jpg' width=250>
-	<br />docbox</p>
+<p align='center'><img src='https://c1.staticflickr.com/5/4786/26869034328_9ff90bf2ac.jpg' width=250><br />docbox</p>
 	
-[![Circle CI](https://circleci.com/gh/tmcw/docbox.svg?style=shield)](https://circleci.com/gh/tmcw/docbox)
-[![Greenkeeper badge](https://badges.greenkeeper.io/tmcw/docbox.svg)](https://greenkeeper.io/)
-
-**Docbox is an open source REST API documentation system.** It takes structured Markdown files and generates a friendly two-column layout with navigation, permalinks, and examples. The documentation source files that Docbox uses are friendly for documentation authors and free of presentational code: it's Markdown.
-
-[![](https://farm2.staticflickr.com/1534/24963539843_e26a00b3e1_b.jpg)](https://67-53007065-gh.circle-artifacts.com/0/tmp/circle-artifacts.NCC9T6a/index.html#our-api)
-
-_[Demo documentation](https://67-53007065-gh.circle-artifacts.com/0/tmp/circle-artifacts.NCC9T6a/index.html#our-api)_
-
 **Docbox is a JavaScript application written with React.** The core magic is thanks to the [remark](http://remark.js.org/) Markdown parser, which enables the layout: after parsing a file into an [Abstract Syntax Tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree), we can move examples to the right, prose to the left, and build the navigation system.
 
 **It has a supercharged test suite**. Our tests check for everything from broken links to invalid examples and structure problems: this way, the application is only concerned with output and you can proactively enforce consistency and correctness. We even extract JavaScript examples from documentation and test them with [eslint](http://eslint.org/)
 
 **When you're ready to ship**, Docbox's `build` task minifies JavaScript and uses React's server rendering code to make documentation indexable for search engines and viewable without JavaScript.
+
+## 运行API浏览器
+
+首先安装如下软件：
+* Node v8 or higher
+* NPM
+* Git
+
+然后执行如下步骤：
+1. `git clone https://github.com/tmcw/docbox.git` 克隆仓库
+2. `npm install` 安装依赖
+3. `npm start` 运行
+4. 通过浏览器打开地址：http://localhost:9966/
 
 ## Writing Documentation
 
@@ -31,20 +34,6 @@ All custom code - code that relates to brands and specifics of APIs - is in the 
 ## Development
 
 We care about the ease of writing documentation. Docbox comes with batteries included: after you `npm install` the project, you can run `npm start` and its development server, [budo](https://github.com/mattdesl/budo), will serve the website locally and update automatically.
-
-### Requirements
-
-* Node v4 or higher
-* NPM
-* Git
-
-To run the site locally:
-
-1. Clone this repository
-	2. `git clone https://github.com/tmcw/docbox.git`
-2. `npm install`
-3. `npm start`
-4. Open http://localhost:9966/
 
 ## Tests
 
