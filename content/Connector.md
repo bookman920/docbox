@@ -1,4 +1,4 @@
-## 连接器
+## 连接器列表
 
 连接器是指协助业务点执行连接公链、发起业务请求并获取应答的流程的辅助类，目前有如下不同类型的连接器
 - 开放式连接器
@@ -11,15 +11,24 @@
 开放式连接器采用 Restful 语法，通过 GET 或 POST 访问API并获得JSON格式的应答
 开放式连接器受流量控制影响，每分钟最多100次访问
 
-```endpoint
-GET http://localhost:17332/public/block/height/:height
-```
 #### Example request
 
 可以使用 curl 或者 Postman 等工具进行API调用测试。GET API可直接用浏览器调用， POST API可以通过浏览器插件调用
 
+```endpoint
+GET http://localhost:17332/public/block/height/:height
+```
+
 ```curl
 curl http://localhost:17332/public/block/height/:height
+```
+
+```endpoint
+POST http://localhost:17332/public/block/height/:height
+```
+
+```curl
+curl -X POST http://localhost:17332/public/block/height/{height}
 ```
 
 #### Example response
@@ -54,6 +63,8 @@ curl http://localhost:17332/public/block/height/:height
 用于基于浏览器的游戏客户端，或没有集成核心库的游戏服务端，向SPV节点/全节点发起API调用
 授权式连接器受流量控制影响，每分钟最多1000次访问
 详细案例请查阅 gamegoldmanager 项目中的 remoting 对象封装
+
+#### Example request
 
 ```javascript
 //此处使用了蚂蚁金服的 dva 库
