@@ -15,4 +15,6 @@ module.exports =
   '# 连接器\n' +
   fs.readFileSync('./content/Connector.md', 'utf8') + '\n' +
   '# 认证和授权\n' +
-  fs.readFileSync('./content/GIP0005.md', 'utf8') + '\n';
+  fs.readFileSync('./content/GIP0005.md', 'utf8') + '\n' +
+  '# 支付协议\n' +
+  fs.readFileSync('./content/GIP0006.md', 'utf8') + '\n';
