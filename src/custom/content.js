@@ -17,4 +17,14 @@ module.exports =
   '# 认证和授权\n' +
   fs.readFileSync('./content/GIP0005.md', 'utf8') + '\n' +
   '# 支付协议\n' +
-  fs.readFileSync('./content/GIP0006.md', 'utf8') + '\n';
+  fs.readFileSync('./content/GIP0006.md', 'utf8') + '\n' +
+  '# 道具空投协议\n' +
+  fs.readFileSync('./content/GIP0009.md', 'utf8') + '\n' +
+  '# 区块链浏览器 - 区块\n' +
+  fs.readFileSync('./content/api.restful.block.md', 'utf8') + '\n' +
+  '# 区块链浏览器 - 地址\n' +
+  fs.readFileSync('./content/api.restful.address.md', 'utf8') + '\n' +
+  '# 区块链浏览器 - 交易\n' +
+  fs.readFileSync('./content/api.restful.tx.md', 'utf8') + '\n' +
+  '# 区块链浏览器 - 辅助\n' +
+  fs.readFileSync('./content/api.restful.util.md', 'utf8') + '\n';

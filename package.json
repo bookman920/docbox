@@ -1,7 +1,7 @@
 {
   "name": "docbox",
   "version": "1.0.11",
-  "description": "an api documentation website",
+  "description": "gamegold api documentation website",
   "main": "index.js",
   "scripts": {
     "gen-index": "cpy --no-overwrite index.html.sample --rename=index.html .",
@@ -23,7 +23,7 @@
     "api",
     "documentation"
   ],
-  "author": "Tom MacWright",
+  "author": "bookmansoft",
   "license": "ISC",
   "dependencies": {
     "babel-cli": "^6.4.0",
