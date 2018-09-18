@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.12"></a>
+## [1.0.12](https://github.com/tmcw/docbox/compare/v1.0.11...v1.0.12) (2018-09-18)
+
+
+### Bug Fixes
+
+* **package:** update brfs to version 2.0.0 ([#90](https://github.com/tmcw/docbox/issues/90)) ([f15114b](https://github.com/tmcw/docbox/commit/f15114b))
+* **package:** update cssnano to version 4.0.4 ([#96](https://github.com/tmcw/docbox/issues/96)) ([735fb63](https://github.com/tmcw/docbox/commit/735fb63)), closes [#93](https://github.com/tmcw/docbox/issues/93)
+
+
+
 <a name="1.0.11"></a>
 ## [1.0.11](https://github.com/tmcw/docbox/compare/v1.0.10...v1.0.11) (2018-06-04)
 
