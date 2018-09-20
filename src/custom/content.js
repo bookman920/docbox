@@ -20,6 +20,10 @@ module.exports =
   fs.readFileSync('./content/GIP0006.md', 'utf8') + '\n' +
   '# 道具空投协议\n' +
   fs.readFileSync('./content/GIP0009.md', 'utf8') + '\n' +
+  '# 道具上链\n' +
+  fs.readFileSync('./content/GIP0001.md', 'utf8') + '\n' +
+  '# 游戏商部署指南\n' +
+  fs.readFileSync('./content/deploy.md', 'utf8') + '\n' +
   '# 区块链浏览器 - 区块\n' +
   fs.readFileSync('./content/api.restful.block.md', 'utf8') + '\n' +
   '# 区块链浏览器 - 地址\n' +
