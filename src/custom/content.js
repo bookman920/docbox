@@ -30,5 +30,7 @@ module.exports =
   fs.readFileSync('./content/api.restful.address.md', 'utf8') + '\n' +
   '# 区块链浏览器 - 交易\n' +
   fs.readFileSync('./content/api.restful.tx.md', 'utf8') + '\n' +
+  '# 区块链浏览器 - 域名\n' +
+  fs.readFileSync('./content/api.restful.cp.md', 'utf8') + '\n' +
   '# 区块链浏览器 - 辅助\n' +
   fs.readFileSync('./content/api.restful.util.md', 'utf8') + '\n';
