@@ -16,7 +16,19 @@ npm start
     npm run cli rpc cp.list 
 ```
 
-4、在窗口A键入 Ctrl-c 关闭全节点
+如果自己尚未拥有CP记录，可以运行如下命令进行注册：
+```bash
+    npm run cli rpc cp.create $name $url [$ip]
+```
+其中：
+    name是CP名称，全局唯一，不可重复，名称只能含有汉字、数字、字母、下划线和点，不能以下划线和点开头和结尾，长度限制为4~40
+
+    url是CP的回调服务地址，用于对外公开相关服务接口
+    ip是备用IP地址，支持IPV4和IPV6两种格式，在url无效的情况下，可直接使用ip进行访问。
+
+注册成功后，再次运行 cp.list 指令进行确认
+
+4、在窗口A键入 Ctrl-C 关闭全节点
 
 5、配置 gamegold.conf 文件
 - 采用包含全部CPID的逗分字符串，配置 hmac-connection 字段

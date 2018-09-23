@@ -24,6 +24,8 @@ module.exports =
   fs.readFileSync('./content/GIP0001.md', 'utf8') + '\n' +
   '# 游戏商部署指南\n' +
   fs.readFileSync('./content/deploy.md', 'utf8') + '\n' +
+  '# RPC - 钱包\n' +
+  fs.readFileSync('./content/api.rpc.wallet.md', 'utf8') + '\n' +
   '# 区块链浏览器 - 区块\n' +
   fs.readFileSync('./content/api.restful.block.md', 'utf8') + '\n' +
   '# 区块链浏览器 - 地址\n' +
