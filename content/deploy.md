@@ -71,7 +71,7 @@ npm start
 
 ### 客户端认证登录流程
 
-主要涉及指令： token.user
+主要涉及指令： token.user game_id user_id open_id
 
 1、页游
 
@@ -88,7 +88,7 @@ npm start
 - 微信小程序扫码后，将信息送至小程序服务端，在服务端执行 token.user 指令，再将生成的令牌以GET方式送入游戏服务器
     两者的区别是：
         钱包APP用HD钱包技术，本地生成并管理所有的地址。
-        微信小程序则在服务端采用HD钱包技术，远程管理所有的地址，用户相关地址记录于他的openid名下。
+        微信小程序则在服务端采用HD钱包技术，远程管理所有的地址，用户相关地址记录于和他的openid同名的账户下。
     两者的共性是：
         都使用 cid+uid，通过HD钱包技术推导出专用地址，cid和uid含义、推导出的地址都是一样的
 - 游戏服务端接收 token ：
@@ -199,12 +199,29 @@ user_addr  |  钱包地址
 3、游戏客户端使用跳转指令，将订单送入钱包，每笔订单包括字段：游戏编号、玩家编号、原始订单号、金额
 4、钱包APP执行订单支付指令：
 ```
-connector.execute({method:'order.pay', params:[cid, uid, sn, price]}).then(tx => {
+connector.execute({method:'order.pay', params:[cid, uid, sn, price, openid]}).then(tx => {
     console.log('order.pay: ', tx);
 });
 ```
 5、钱包成功支付后，向全网广播交易；当游戏特约全节点收到该交易，将调用游戏服务端的订单确认回调接口
 6、游戏服务端收到回调请求，将订单设置为"已确认"，处理道具发放流程，并推送给游戏客户端
+```js
+//钱包节点回调游戏端接口：确认指定订单已经支付
+app.post('/order/confirm', async (req, res) => {
+    //解构路由上传来的数据
+    let {data, sig} = req.body;
+    //利用业务数据作为令牌随机量，结合本地缓存的令牌固定量计算令牌
+    const hmac = crypto.createHmac('sha256', stringify(data));
+    let sim = hmac.update(userMgr.wallet.client.token).digest('hex'); 
+
+    //将计算令牌和传递令牌进行比对
+    if (!!ccmp(Buffer.from(sim, 'hex'), Buffer.from(sig, 'hex'))) {
+        //通知指定订单已经获得了几个确认，-1表示交易被清除
+        orderManager.confirm(data);
+    }
+    res.send({code:0});
+});
+```
 7、游戏客户端将订单订单状态改为已支付，延后更新用户背包信息
 
 ### 订单查询
@@ -261,3 +278,29 @@ cid     |  CP编码
 oid     |  道具原始编号
 gold    |  道具含金量
 addr    |  玩家接收道具的地址
+
+### 提供道具查询接口
+
+游戏服务端以约定的格式，对外提供道具信息查询接口
+
+如下为道具图片查询接口范例：
+```js
+//获取指定道具的特定规格的图片，其中 id 为道具编号，mode为图片规格，默认为small，可以选择small, medium, large
+app.get('/prop/img/:id/:mode', (req, res) => {
+    let mode = req.params.mode || 'small';
+    let id = req.params.id;
+
+    let index = fs.readFileSync(`${__dirname}/images/${mode}/${id}.png`);
+    res.writeHead(200, {'Content-Type': 'image/png'});
+    res.write(index, 'binary');
+    res.end();
+});
+
+//获取指定道具的详细规格说明
+app.get('/prop/info/:id', (req, res) => {
+    let id = req.params.id;
+
+    let productInfo = {};
+    res.send(200, productInfo, 'json');
+});
+```
