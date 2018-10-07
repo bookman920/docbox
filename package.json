@@ -1,6 +1,6 @@
 {
   "name": "docbox",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "gamegold api documentation website",
   "main": "index.js",
   "scripts": {

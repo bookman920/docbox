@@ -24,6 +24,8 @@ module.exports =
   fs.readFileSync('./content/GIP0001.md', 'utf8') + '\n' +
   '# 游戏商部署指南\n' +
   fs.readFileSync('./content/deploy.md', 'utf8') + '\n' +
+  '# 小程序多帐号体系\n' +
+  fs.readFileSync('./content/multiAccount.md', 'utf8') + '\n' +
   '# RPC - 钱包\n' +
   fs.readFileSync('./content/api.rpc.wallet.md', 'utf8') + '\n' +
   '# 区块链浏览器 - 区块\n' +
