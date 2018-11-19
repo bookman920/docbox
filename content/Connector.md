@@ -1,13 +1,11 @@
-## 连接器列表
+## 连接到游戏金公链
 
-连接器是指协助业务点执行连接公链、发起业务请求并获取应答的流程的辅助类，目前有如下不同类型的连接器
-- 开放式连接器
-- 授权式连接器
-- 控制台连接器
+1. 通过浏览器，采用标准 Restful 语法访问游戏金公链，限定于访问开放式RPC接口
+2. 通过接器依赖包连接游戏金公链，访问所有RPC接口
 
-### 开放式连接器
+### Restful 模式
 
-用于基于浏览器的应用，在未经全节点授权的情况下，访问部分脱敏API
+用于基于浏览器的应用（例如区块链浏览器），在未经全节点授权的情况下，访问部分脱敏API
 开放式连接器采用 Restful 语法，通过 GET 或 POST 访问API并获得JSON格式的应答
 开放式连接器受流量控制影响，每分钟最多100次访问
 
@@ -58,17 +56,27 @@ curl -X POST http://localhost:17332/public/block/height/{height}
 }
 ```
 
-### 授权式连接器
+### 使用连接器依赖包
 
-用于基于浏览器的游戏客户端，或没有集成核心库的游戏服务端，向SPV节点/全节点发起API调用
-授权式连接器受流量控制影响，每分钟最多1000次访问
-详细案例请查阅 gamegoldmanager 项目中的 remoting 对象封装
+连接器是指协助业务点执行连接公链、发起业务请求并获取应答的流程的辅助类，
+用于基于浏览器的游戏客户端/SPV钱包，或游戏服务端/全节点管理后台，向SPV节点/全节点发起RPC调用
+连接器受流量控制影响，每分钟最多1000次访问
+
+执行如下语句引入连接器依赖包：
+```bash
+npm i gamegoldtoolkit
+```
+
+获取连接器git库：
+```bash
+git clone https://github.com/bookmansoft/gamegoldtoolkit
+```
 
 #### Example request
 
 ```javascript
-//连接器
-const remote = require('/lib/authConn')
+//引入连接器依赖包
+const remote = require('gamegoldtoolkit')
 remote.setup({
     type:   'testnet',            //远程全节点类型
     ip:     '127.0.0.1',          //远程全节点地址
@@ -78,35 +86,33 @@ remote.setup({
     token:  '0340129aaa7a69ac10bfbf314b9b1ca8bdda5faecce1b6dab3e7c4178b99513392', //访问钱包时的令牌固定量，通过HMAC算法，将令牌随机量和令牌固定量合成为最终的访问令牌
 });
 
-//发起远程API调用，获取游戏列表，外围用异步函数进行了包装以使用 await 关键字
-(async ()=>{
+//用异步函数进行了包装以使用 await 关键字
+(async () => {
+  //获取游戏列表
   let params = []; //params为参数数组
   let rt = await remote.execute('cp.list', params); 
+  console.log(rt);
+
+  //查询区块信息
+  rt = await remote.get('block/4d80d69a80967c6609fa2606e07fb7e3ad51f8338ce2f31651cb0acdd9250000');
+  console.log(rt);
 })();
-```
 
-### 控制台连接器
+//引入授权式连接器
+const sclient = require('socket.io-client')
+const conn = require('../../src/authConn')
+//设置node环境下兼容的fetch函数
+const fetch = require('node-fetch')
 
-用于集成了核心库（GameGold Core）的控制台或游戏服务端，向SPV节点/全节点发起API调用
-本连接器使用了核心库提供的 accessWallet 类
-
-#### Example request
-
-```javascript
-//创建连接器
-let connector = new accessWallet({
-    rpcHost: '127.0.0.1',                       //远程节点地址
-    apiKey: 'hello',                            //简单校验密码
-    network: 'testnet',                         //对等网络类型
-    id: 'primary',                              //对接的钱包名称
-    cid: '2c9af1d0-7aa3-11e8-8095-3d21d8a3bdc9',//特约生产者编码，用于全节点计算令牌固定量
-    //特约生产者令牌固定量，由全节点统一制备后，离线分发给各个终端
-    token: '03f6682764acd7e015fe4e8083bdb2b969eae0d6243f810a370b23ad3863c2efcd', 
-});
-
-//发起远程API调用，获取指定玩家在指定游戏内的道具列表
-let props = await connector.execute('queryProps', [
-  cid,  //游戏识别码
-  addr  //玩家地址，钱包APP通过 URL Schema 送入游戏客户端，并经过了游戏客户端的独立验证
-]);
+let remote = new conn(sclient);
+remote.setFetch(fetch).setup(
+    {//设置授权式连接器的网络类型和对应参数，网络类型分为 testnet 和 main
+        type:   'testnet',            //远程全节点类型
+        ip:     '127.0.0.1',          //远程全节点地址
+        apiKey: 'bookmansoft',        //远程全节点基本校验密码
+        id:     'primary',            //默认访问的钱包编号
+        cid:    'xxxxxxxx-game-gold-root-xxxxxxxxxxxx', //授权节点编号，用于访问远程钱包时的认证
+        token:  '03aee0ed00c6ad4819641c7201f4f44289564ac4e816918828703eecf49e382d08', //授权节点令牌固定量，用于访问远程钱包时的认证
+    }
+);
 ```
