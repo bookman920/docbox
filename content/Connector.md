@@ -75,16 +75,20 @@ git clone https://github.com/bookmansoft/gamegoldtoolkit
 #### Example request
 
 ```javascript
-//引入连接器依赖包
-const remote = require('gamegoldtoolkit')
-remote.setup({
-    type:   'testnet',            //远程全节点类型
-    ip:     '127.0.0.1',          //远程全节点地址
-    apiKey: 'bookmansoft',        //远程全节点基本校验密码
-    id:     'primary',            //默认访问的钱包编号
-    cid:    'terminal001',        //终端编码，作为访问远程全节点时的终端标识
-    token:  '0340129aaa7a69ac10bfbf314b9b1ca8bdda5faecce1b6dab3e7c4178b99513392', //访问钱包时的令牌固定量，通过HMAC算法，将令牌随机量和令牌固定量合成为最终的访问令牌
-});
+//引入授权式连接器
+const conn = require('gamegoldtoolkit')
+let remote = new conn();
+
+remote.setFetch(require('node-fetch')) //设置node环境下兼容的fetch函数
+.setup({//设置授权式连接器的网络类型和对应参数，网络类型分为 testnet 和 main
+        type:   'testnet',            //远程全节点类型
+        ip:     '127.0.0.1',          //远程全节点地址
+        apiKey: 'bookmansoft',        //远程全节点基本校验密码
+        id:     'primary',            //默认访问的钱包编号
+        cid:    'xxxxxxxx-game-gold-root-xxxxxxxxxxxx', //授权节点编号，用于访问远程钱包时的认证
+        token:  '03aee0ed00c6ad4819641c7201f4f44289564ac4e816918828703eecf49e382d08', //授权节点令牌固定量，用于访问远程钱包时的认证
+    }
+);
 
 //用异步函数进行了包装以使用 await 关键字
 (async () => {
@@ -97,22 +101,4 @@ remote.setup({
   rt = await remote.get('block/4d80d69a80967c6609fa2606e07fb7e3ad51f8338ce2f31651cb0acdd9250000');
   console.log(rt);
 })();
-
-//引入授权式连接器
-const sclient = require('socket.io-client')
-const conn = require('../../src/authConn')
-//设置node环境下兼容的fetch函数
-const fetch = require('node-fetch')
-
-let remote = new conn(sclient);
-remote.setFetch(fetch).setup(
-    {//设置授权式连接器的网络类型和对应参数，网络类型分为 testnet 和 main
-        type:   'testnet',            //远程全节点类型
-        ip:     '127.0.0.1',          //远程全节点地址
-        apiKey: 'bookmansoft',        //远程全节点基本校验密码
-        id:     'primary',            //默认访问的钱包编号
-        cid:    'xxxxxxxx-game-gold-root-xxxxxxxxxxxx', //授权节点编号，用于访问远程钱包时的认证
-        token:  '03aee0ed00c6ad4819641c7201f4f44289564ac4e816918828703eecf49e382d08', //授权节点令牌固定量，用于访问远程钱包时的认证
-    }
-);
 ```
