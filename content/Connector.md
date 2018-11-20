@@ -1,13 +1,14 @@
-## 连接到游戏金公链
+## 与游戏金公链进行交互
 
-1. 通过浏览器，采用标准 Restful 语法访问游戏金公链，限定于访问开放式RPC接口
-2. 通过接器依赖包连接游戏金公链，访问所有RPC接口
+可以通过如下可选方式，与游戏金公链进行交互：
+1. Restful 模式：采用标准 Restful 语法访问游戏金公链，限定于访问开放式RPC接口
+2. 连接器模式：通过连接器连接游戏金公链，访问所有RPC接口
 
 ### Restful 模式
 
-用于基于浏览器的应用（例如区块链浏览器），在未经全节点授权的情况下，访问部分脱敏API
-开放式连接器采用 Restful 语法，通过 GET 或 POST 访问API并获得JSON格式的应答
-开放式连接器受流量控制影响，每分钟最多100次访问
+用于基于浏览器的应用（例如区块链浏览器），在未经全节点授权的情况下，访问开放式RPC接口
+该模式采用 Restful 语法，通过 GET 或 POST 访问开放式RPC接口并获得JSON格式的应答
+开放式RPC接口受流量控制影响，每分钟最多100次访问
 
 #### Example request
 
@@ -56,10 +57,10 @@ curl -X POST http://localhost:17332/public/block/height/{height}
 }
 ```
 
-### 使用连接器依赖包
+### 连接器模式
 
-连接器是指协助业务点执行连接公链、发起业务请求并获取应答的流程的辅助类，
-用于基于浏览器的游戏客户端/SPV钱包，或游戏服务端/全节点管理后台，向SPV节点/全节点发起RPC调用
+连接器是指协助业务点连接公链、发起业务请求并获取应答的辅助类
+连接器用于向SPV节点/全节点发起RPC调用，广泛适用于游戏客户端/SPV钱包/游戏服务端/全节点管理后台等场景中
 连接器受流量控制影响，每分钟最多1000次访问
 
 执行如下语句引入连接器依赖包：
@@ -79,22 +80,22 @@ git clone https://github.com/bookmansoft/gamegoldtoolkit
 const conn = require('gamegoldtoolkit')
 let remote = new conn();
 
-remote.setFetch(require('node-fetch')) //设置node环境下兼容的fetch函数
-.setup({//设置授权式连接器的网络类型和对应参数，网络类型分为 testnet 和 main
-        type:   'testnet',            //远程全节点类型
+remote
+.setFetch(require('node-fetch'))  //设置node环境下兼容的fetch函数
+.setup({                          //设置授权式连接器的网络类型和对应参数
+        type:   'testnet',            //远程全节点类型，分为 testnet 和 main
         ip:     '127.0.0.1',          //远程全节点地址
         apiKey: 'bookmansoft',        //远程全节点基本校验密码
         id:     'primary',            //默认访问的钱包编号
-        cid:    'xxxxxxxx-game-gold-root-xxxxxxxxxxxx', //授权节点编号，用于访问远程钱包时的认证
-        token:  '03aee0ed00c6ad4819641c7201f4f44289564ac4e816918828703eecf49e382d08', //授权节点令牌固定量，用于访问远程钱包时的认证
+        cid:    'xxxxxxxx-game-gold-root-xxxxxxxxxxxx',                               //授权节点编号
+        token:  '03aee0ed00c6ad4819641c7201f4f44289564ac4e816918828703eecf49e382d08', //授权节点离线令牌
     }
 );
 
 //用异步函数进行了包装以使用 await 关键字
 (async () => {
   //获取游戏列表
-  let params = []; //params为参数数组
-  let rt = await remote.execute('cp.list', params); 
+  let rt = await remote.execute('cp.list', []); 
   console.log(rt);
 
   //查询区块信息
