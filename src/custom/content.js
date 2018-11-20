@@ -18,8 +18,6 @@ module.exports =
   fs.readFileSync('./content/GIP0005.md', 'utf8') + '\n' +
   '# 支付协议\n' +
   fs.readFileSync('./content/GIP0006.md', 'utf8') + '\n' +
-  '# 道具空投协议\n' +
-  fs.readFileSync('./content/GIP0009.md', 'utf8') + '\n' +
   '# 道具上链\n' +
   fs.readFileSync('./content/GIP0001.md', 'utf8') + '\n' +
   '# 游戏商部署指南\n' +
