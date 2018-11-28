@@ -16,22 +16,112 @@
     1、Root模式下，simulateAccount 返回RPC调用中上传的账户，例如微信小程序后台就是调用时填写当前用户的OPENID，以便将用户的操作限定于各自账户内
     2、普通模式下，simulateAccount 返回终端码作为账户，覆盖了RPC调用中上传的账户，以此将RPC调用强行限定于终端码对应的账户内
 
-## 函数清单
+## 管理后台操作规范
+@note 务请提前修改 .gamegold.conf 的配置字段 hmac-salt 为个性化HEX字符串(长度64)
 
-## 创建CP
+### 超级用户如何登录
+
+通过如下指令，然后从全节点监控屏上拷贝实时生成的令牌：
+```bash
+token.auth "xxxxxxxx-game-gold-root-xxxxxxxxxxxx"
+```
+
+屏显终端码对应的令牌如下：
+c01: 0340129aaa7a69ac10bfbf314b9b1ca8bdda5faecce1b6dab3e7c4178b99513392
+
+至此，可以形成超级用户登录授权所需的 cid/token 参数对
+
+通过如下指令，生成对外公布的收款地址
+```bash
+address.create
+```
+
+### 如何添加新的操作员账户？
+
+管理员以超级用户身份登录(自动对应)，输入操作员登录名(例如 c01)等信息，生成新的操作员账户，并绑定对应的令牌
+
+运行如下指令，然后从全节点监控屏上拷贝实时生成的令牌：
+```bash
+token.auth "c01"
+```
+
+屏显终端码对应的令牌如下：
+c01: 0296a660c1f0ae0a6b1727db34d86a989f6ff28c8bb0a45ab2b212edf5148c0ad4
+
+至此，可以形成登录授权所需的 cid/token 参数对
+
+通过如下指令，生成该操作员专用的收款地址(operator-addr):
+```bash
+address.create c01
+```
+
+### 操作员如何连接全节点
+
+操作员登录后，后台系统将为其生成相应的全节点连接器：
+```js
+//引入工具包
+const toolkit = require('gamegoldtoolkit')
+//创建授权式连接器实例
+const remote = new toolkit.conn();
+remote.setup({ //设置授权式连接器的参数
+    type:   'testnet',               //希望连接的对等网络的类型，分为 testnet 和 main
+    ip:     '127.0.0.1',             //远程全节点地址
+    apiKey: 'bookmansoft',           //远程全节点基本校验密码, 对应配置字段 api-key
+    id:     'primary',               //默认访问的钱包编号
+    cid:    'c01',                   //终端编码
+    token:  '0296a660c1f0ae0a6b1727db34d86a989f6ff28c8bb0a45ab2b212edf5148c0ad4', //访问钱包时的令牌固定量
+});
+```
+
+通过如下指令，生成该操作员专用的收款地址(operator-addr):
+```bash
+address.create
+```
+
+### 如何注册CP？
+
+操作员登录系统，输入名称、IP地址、收款地址等必要信息，注册新的CP。如果未指定收款地址，系统在操作员账户内自动分配(不推荐)
+
+注册厂商: 名称(不少于4个字符) URL地址 (CP收款地址 IP地址)
+```bash
+cp.create "name" "url" ("addr" "ip")
+```
+
+### 备用金如何管理？
+
+超级用户登录后，选取管理员，为其公开的收款地址注入备用金
 
 ```bash
-cp.create name url ip [account]
+tx.send operator-addr amount
+```
+
+### 如何制备道具？
+
+操作员登录系统, 为其名下的CP制备并送出道具，该操作将消耗操作员名下的备用金
+
+运行如下语句制备道具，参数包括 厂商编码 道具原始码 含金量 目标地址：
+```bash
+prop.order cid oid gold addr
+```
+@note addr 为系统查询得出的高值用户的地址
+
+## 函数清单
+
+### 创建CP
+
+```bash
+cp.create name url addr ip [account]
 ```
 
 Property | Description
 ---|---
 name    |   名称
 url     |   URL
+addr    |   收款地址
 ip      |   IP
 account |   用于创建CP的子账户名称
 
-## 修改CP
+### 修改CP
 
 ```bash
 cp.change name newName url ip [addr] [account]
